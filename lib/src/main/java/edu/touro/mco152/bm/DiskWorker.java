@@ -5,7 +5,6 @@ import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
 
 import jakarta.persistence.EntityManager;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,7 +89,18 @@ public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
           The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
          */
         if (App.writeTest) {
-            DiskRun run = diskRunPreparer(DiskRun.IOMode.WRITE);
+            DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
+            run.setNumMarks(App.numOfMarks);
+            run.setNumBlocks(App.numOfBlocks);
+            run.setBlockSize(App.blockSizeKb);
+            run.setTxSize(App.targetTxSizeKb());
+            run.setDiskInfo(Util.getDiskInfo(dataDir));
+
+            // Tell logger and GUI to display what we know so far about the Run
+            msg("disk info: (" + run.getDiskInfo() + ")");
+
+            Gui.chartPanel.getChart().getTitle().setVisible(true);
+            Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
             // Create a test data file using the default file system and config-specified location
             if (!App.multiFile) {
@@ -199,7 +209,17 @@ public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
 
         // Same as above, just for Read operations instead of Writes.
         if (App.readTest) {
-            DiskRun run = diskRunPreparer(DiskRun.IOMode.READ);
+            DiskRun run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
+            run.setNumMarks(App.numOfMarks);
+            run.setNumBlocks(App.numOfBlocks);
+            run.setBlockSize(App.blockSizeKb);
+            run.setTxSize(App.targetTxSizeKb());
+            run.setDiskInfo(Util.getDiskInfo(dataDir));
+
+            msg("disk info: (" + run.getDiskInfo() + ")");
+
+            Gui.chartPanel.getChart().getTitle().setVisible(true);
+            Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
             for (int m = startFileNum; m < startFileNum + App.numOfMarks && !isCancelled(); m++) {
 
@@ -267,27 +287,10 @@ public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
         return true;
     }
 
-    private DiskRun diskRunPreparer(DiskRun.IOMode mode) {
-        DiskRun run = new DiskRun(mode, App.blockSequence);
-        run.setNumMarks(App.numOfMarks);
-        run.setNumBlocks(App.numOfBlocks);
-        run.setBlockSize(App.blockSizeKb);
-        run.setTxSize(App.targetTxSizeKb());
-        run.setDiskInfo(Util.getDiskInfo(dataDir));
-
-        msg("disk info: (" + run.getDiskInfo() + ")");
-
-        Gui.chartPanel.getChart().getTitle().setVisible(true);
-        Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
-
-        return run;
-    }
-
     /**
      * Process a list of 'chunks' that have been processed, ie that our thread has previously
      * published to Swing. For my info, watch Professor Cohen's video -
      * Module_6_RefactorBadBM Swing_DiskWorker_Tutorial.mp4
-     *
      * @param markList a list of DiskMark objects reflecting some completed benchmarks
      */
     @Override
