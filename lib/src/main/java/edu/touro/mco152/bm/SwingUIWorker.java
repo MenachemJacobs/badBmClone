@@ -30,8 +30,8 @@ public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorke
 
     //@SafeVarargs
     @Override
-    public final void publishChunks(T... chunks) {
-        publish(chunks);
+    public final void publishChunks(DiskMark chunks) {
+        publish((T) chunks);
     }
 
     @Override
