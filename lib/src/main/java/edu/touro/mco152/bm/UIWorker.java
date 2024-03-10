@@ -17,5 +17,8 @@ public interface UIWorker<T> {
             ExecutionException, TimeoutException;
 
     public void addPropChangeListen(PropertyChangeListener listener);
+    public void executeTask();
+
+    public void assignDoInBackground(Runnable backgroundTask);
 
 }

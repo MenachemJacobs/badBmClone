@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorker<T>{
-    private final Runnable backgroundTask;
+    private Runnable backgroundTask;
 
-    public SwingUIWorker(Runnable backgroundTask) {
+    public void assignDoInBackground(Runnable backgroundTask) {
         this.backgroundTask = backgroundTask;
     }
 
@@ -62,4 +62,7 @@ public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorke
             return false;
         }
     }
+
+    @Override
+    public final void executeTask(){execute();}
 }

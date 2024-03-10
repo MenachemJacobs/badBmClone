@@ -243,7 +243,7 @@ public class App {
             msg("worker is null abort...");
             return;
         }
-        worker.currentWorker.setIsCancelled(true);
+        worker.currentUI.setIsCancelled(true);
     }
 
     /**
@@ -269,8 +269,9 @@ public class App {
         Gui.mainFrame.adjustSensitivity();
 
         //4. set up disk worker thread and its event handlers
-        worker = new DiskWorker("SwingUIWorker");
-        worker.currentWorker.addPropChangeListen((final PropertyChangeEvent event) -> {
+        worker = new DiskWorker(new SwingUIWorker<>());
+
+        worker.currentUI.addPropChangeListen((final PropertyChangeEvent event) -> {
             switch (event.getPropertyName()) {
                 case "progress":
                     int value = (Integer) event.getNewValue();
@@ -291,7 +292,7 @@ public class App {
         });
 
         //5. start the Swing worker thread
-        worker.currentWorker.execute();
+        worker.currentUI.executeTask();
     }
 
     /**
