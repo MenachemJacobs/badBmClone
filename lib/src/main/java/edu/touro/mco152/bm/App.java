@@ -194,6 +194,7 @@ public class App {
             Logger.getLogger(SelectFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     /**
      * Gets data about the configuration and returns it in String form.
      *
