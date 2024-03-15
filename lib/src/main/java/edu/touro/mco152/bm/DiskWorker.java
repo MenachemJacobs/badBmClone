@@ -38,19 +38,19 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  */
 
 public class DiskWorker {
-
-    // Record any success or failure status returned from SwingWorker (might be us or super)
-    Boolean lastStatus = null;  // so far unknown
     public final UIWorker<Boolean> currentUI;
 
     public DiskWorker(UIWorker<Boolean> passedUI) {
         currentUI = passedUI;
+        boolean[] result = new boolean[1];
 
         Runnable backgroundTask = () -> {
             try {
-                doInBackground();
+                result[0] = doInBackground();
             } catch (Exception e) {
-                e.printStackTrace(); // Handle or log the exception as needed.
+                e.printStackTrace();
+            } finally {
+                currentUI.onTaskCompleted(result[0]);
             }
         };
 
@@ -302,13 +302,5 @@ public class DiskWorker {
         App.nextMarkNumber += App.numOfMarks;
 
         return true;
-    }
-
-    public Boolean getLastStatus() {
-        return lastStatus;
-    }
-
-    public void setLastStatus(Boolean lastStatus) {
-        this.lastStatus = lastStatus;
     }
 }

@@ -28,4 +28,6 @@ public interface UIWorker<T> {
     public void assignDoInBackground(Runnable backgroundTask);
 
     void assignHardWare(DiskWorker diskWorker);
+
+    void onTaskCompleted(boolean result);
 }

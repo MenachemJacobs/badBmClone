@@ -17,10 +17,16 @@ public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorke
     private Runnable backgroundTask;
     private DiskWorker currentHardWare;
 
+    // Record any success or failure status returned from SwingWorker (might be us or super)
+    Boolean lastStatus = null;  // so far unknown
+
     public void assignDoInBackground(Runnable backgroundTask) {
         this.backgroundTask = backgroundTask;
     }
     public void assignHardWare(DiskWorker passedHardWare){currentHardWare = passedHardWare;}
+
+    @Override
+    public void onTaskCompleted(boolean result) {}
 
     @Override
     public boolean getIsCancelled() {
@@ -104,7 +110,7 @@ public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorke
     protected void done() {
         // Obtain final status, might from doInBackground ret value, or SwingWorker error
         try {
-            currentHardWare.setLastStatus((boolean) getResult());   // record for future access
+            setLastStatus((boolean) getResult());   // record for future access
         } catch (Exception e) {
             Logger.getLogger(App.class.getName()).warning("Problem obtaining final status: " + e.getMessage());
         }
@@ -114,5 +120,13 @@ public class SwingUIWorker<T> extends SwingWorker<Boolean, T> implements UIWorke
         }
         App.state = App.State.IDLE_STATE;
         Gui.mainFrame.adjustSensitivity();
+    }
+
+    public Boolean getLastStatus() {
+        return lastStatus;
+    }
+
+    public void setLastStatus(Boolean lastStatus) {
+        this.lastStatus = lastStatus;
     }
 }
