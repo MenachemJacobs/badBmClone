@@ -7,8 +7,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilTests {
     @Test
@@ -56,7 +55,7 @@ public class UtilTests {
         dirName.delete();
     }
 
-    private static boolean allFilesDeleted(File directory){
+    private static boolean allFilesDeleted(File directory) {
         File[] files = directory.listFiles();
         return files == null || files.length == 0;
     }
@@ -75,7 +74,16 @@ public class UtilTests {
         assertTrue(randReturn >= min && randReturn <= max, "out of bounds values are being returned by Util.randInt()");
     }
 
-    @Test
-    void displayString() {
+    @ParameterizedTest
+    @CsvSource({
+            "1",
+            "10.24",
+            "0.2"
+    })
+    void displayString(float num) {
+        if (num - (int)num == 0)
+            assertEquals((int) num + "", Util.displayString(num));
+        else
+            assertEquals(num + "", Util.displayString(num));
     }
 }
