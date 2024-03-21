@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 public class TestingUIWorker<T> implements UIWorker<T> {
     boolean isCancelled = false;
     private Runnable backgroundTask;
@@ -101,4 +102,6 @@ public class TestingUIWorker<T> implements UIWorker<T> {
 
     @Override
     public void publishChunks(DiskMark chunks) {}
+
+
 }
