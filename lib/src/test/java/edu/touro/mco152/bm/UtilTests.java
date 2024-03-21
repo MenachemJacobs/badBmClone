@@ -1,11 +1,12 @@
 package edu.touro.mco152.bm;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.File;
 import java.io.IOException;
 
-import static java.nio.file.Files.createFile;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,7 +30,7 @@ public class UtilTests {
         assertTrue(allFilesDeleted(directory), "All files should be deleted");
 
         if (directory.exists())
-            cleanUp(directory);
+            cleanUpFileStruct(directory);
     }
 
     private static void createFile(String dirPath, String fN) {
@@ -41,13 +42,13 @@ public class UtilTests {
         }
     }
 
-    private static void cleanUp(File dirName) {
+    private static void cleanUpFileStruct(File dirName) {
         File[] files = dirName.listFiles();
 
         assert files != null;
         for (File fN : files) {
             if (fN.isDirectory()) {
-                cleanUp(fN);
+                cleanUpFileStruct(fN);
             } else {
                 fN.delete();
             }
@@ -60,8 +61,18 @@ public class UtilTests {
         return files == null || files.length == 0;
     }
 
-    @Test
-    void randInt() {
+    @ParameterizedTest
+    @CsvSource({
+            "1, 10",
+            "-100, 100",
+            "-5, 5",
+            "0, 0",
+            "10, 1"
+    })
+    void randInt(int min, int max) {
+        int randReturn = Util.randInt(min, max);
+
+        assertTrue(randReturn >= min && randReturn <= max, "out of bounds values are being returned by Util.randInt()");
     }
 
     @Test
