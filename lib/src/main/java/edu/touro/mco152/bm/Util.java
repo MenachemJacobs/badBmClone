@@ -58,7 +58,10 @@ public class Util {
 
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
-
+        /**
+         * have broken this by removing the plus one to make it inclusive.
+         * breaks test as well.
+         */
         return rand.nextInt((max - min)) + min;
     }
 
