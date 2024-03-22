@@ -85,6 +85,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel wMaxLabel;
     private javax.swing.JLabel wMinLabel;
     private javax.swing.JCheckBoxMenuItem writeSyncCheckBoxMenuItem;
+
     /**
      * Creates new form MainFrame
      */
