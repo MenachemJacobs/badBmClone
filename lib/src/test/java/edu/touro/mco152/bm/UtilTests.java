@@ -82,7 +82,7 @@ public class UtilTests {
             "1, 10",
             "1, 2147483647",
             "-5, 5",
-            "0, 0",
+            "1, 1",
     })
     void randInt(int min, int max) {
         int randReturn = Util.randInt(min, max);
