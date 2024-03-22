@@ -1,32 +1,43 @@
 package edu.touro.mco152.bm;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UtilTests {
-    @Test
+
+    /**
+     * Performance: test assert that removal is done under a sub-linear time barrier.
+     */
+    @RepeatedTest(5) // This will run the test method 5 times
     void deleteDirectory() {
         String directoryPath = "testDirRemove";
-
         File directory = new File(directoryPath);
+        int numOfFiles = 1000;
 
-        if (!directory.exists())
+        if (!directory.exists()) {
             directory.mkdir();
 
-        createFile(directoryPath, "file1");
-        createFile(directoryPath, "file2");
-        createFile(directoryPath, "file3");
+            for (int i = 0; i < numOfFiles; i++) {
+                createFile(directoryPath, "file" + i);
+            }
+        }
 
+        Instant start = Instant.now();
         Util.deleteDirectory(directory);
+        long end = (Instant.now()).toEpochMilli() - start.toEpochMilli();
 
         assertFalse(directory.exists(), "Directory created as part of test has not been removed");
         assertTrue(allFilesDeleted(directory), "All files should be deleted");
+
+        assertTrue(end * 2 < numOfFiles, "Files are being removed too slow");
 
         if (directory.exists())
             cleanUpFileStruct(directory);
@@ -60,18 +71,31 @@ public class UtilTests {
         return files == null || files.length == 0;
     }
 
+    /**
+     * boundaries checked: very large, very negative, single correct results.
+     *
+     * @param min
+     * @param max
+     */
     @ParameterizedTest
     @CsvSource({
             "1, 10",
-            "-100, 100",
+            "1, 2147483647",
             "-5, 5",
             "0, 0",
-            "10, 1"
     })
     void randInt(int min, int max) {
         int randReturn = Util.randInt(min, max);
 
         assertTrue(randReturn >= min && randReturn <= max, "out of bounds values are being returned by Util.randInt()");
+    }
+
+    /**
+     * Error Forcing: Passing in a large and then small integer to the intRandom method should force an Illegal Arg Exception
+     */
+    @Test
+    void randIntError(){
+        assertThrows(IllegalArgumentException.class, () -> Util.randInt(10,1), "passing (large, small) int randInt generator is not throwing an Exception");
     }
 
     @ParameterizedTest

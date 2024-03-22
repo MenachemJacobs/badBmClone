@@ -1,7 +1,6 @@
 package edu.touro.mco152.bm;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -15,10 +14,14 @@ public class DiskMarkTest {
         myMark = new DiskMark(DiskMark.MarkType.READ);
     }
 
+    /**
+     * Cross-Checking: Used a getter to verify the changes made with the setter
+     * @param markNum
+     */
     @ParameterizedTest
     @CsvSource({
             "1",
-            "-100",
+            "100",
             "-20",
             "11",
             "0"
