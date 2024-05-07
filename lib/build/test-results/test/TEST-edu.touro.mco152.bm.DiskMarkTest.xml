@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.touro.mco152.bm.DiskMarkTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-03-22T18:56:31" hostname="MSI" time="0.035">
+<testsuite name="edu.touro.mco152.bm.DiskMarkTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-07T19:10:35" hostname="MSI" time="0.064">
   <properties/>
-  <testcase name="[1] 1" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.025"/>
-  <testcase name="[2] 100" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.001"/>
-  <testcase name="[3] -20" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.0"/>
-  <testcase name="[4] 11" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.0"/>
-  <testcase name="[5] 0" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.001"/>
+  <testcase name="[1] 1" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.044"/>
+  <testcase name="[2] 100" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.003"/>
+  <testcase name="[3] -20" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.002"/>
+  <testcase name="[4] 11" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.002"/>
+  <testcase name="[5] 0" classname="edu.touro.mco152.bm.DiskMarkTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
