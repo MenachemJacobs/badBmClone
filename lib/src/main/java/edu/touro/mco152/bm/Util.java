@@ -62,7 +62,7 @@ public class Util {
          * have broken this by removing the plus one to make it inclusive.
          * breaks test as well.
          */
-        return rand.nextInt((max - min)) + min;
+        return rand.nextInt((max - min) + 1) + min;
     }
 
 
