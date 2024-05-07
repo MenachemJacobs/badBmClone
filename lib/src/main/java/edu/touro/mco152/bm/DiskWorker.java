@@ -283,6 +283,7 @@ public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
 
             Gui.runPanel.addRun(run);
         }
+
         App.nextMarkNumber += App.numOfMarks;
         return true;
     }
