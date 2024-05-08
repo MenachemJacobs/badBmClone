@@ -11,7 +11,7 @@ import edu.touro.mco152.bm.ui.Gui;
 import static edu.touro.mco152.bm.App.*;
 
 
-public abstract class ReadWriteCommands<T> implements Runnable {
+public abstract class ReadWriteCommands<T> implements Runnable, Command {
 
     DiskRun run;
 
@@ -64,5 +64,10 @@ public abstract class ReadWriteCommands<T> implements Runnable {
 
         Gui.chartPanel.getChart().getTitle().setVisible(true);
         Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
+
+        execute();
     }
+
+    @Override
+    abstract public void execute();
 }

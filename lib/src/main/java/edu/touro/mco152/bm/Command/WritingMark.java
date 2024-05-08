@@ -29,13 +29,7 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
     }
 
     @Override
-    public void run() {
-        super.run();
-    }
-
-    @Override
     public void execute() {
-
         // Create a test data file using the default file system and config-specified location
         if (!App.multiFile) {
             testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata.jdm");

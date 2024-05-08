@@ -30,12 +30,7 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
         OP = READ;
     }
 
-    @Override
-    public void run() {
-        super.run();
-    }
-
-    public boolean isSuccess(){return isSuccess}
+    public boolean isSuccess(){return isSuccess;}
 
     @Override
     public void execute()  {
