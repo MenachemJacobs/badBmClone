@@ -1,5 +1,6 @@
 package edu.touro.mco152.bm;
 
+import edu.touro.mco152.bm.Command.Invoker;
 import edu.touro.mco152.bm.Command.ReadingMark;
 import edu.touro.mco152.bm.Command.WritingMark;
 import edu.touro.mco152.bm.persist.DiskRun;
@@ -68,15 +69,6 @@ public class DiskWorker {
         msg("Running readTest " + App.readTest + "   writeTest " + App.writeTest);
         msg("num files: " + App.numOfMarks + ", num blks: " + App.numOfBlocks + ", blk size (kb): " + App.blockSizeKb + ", blockSequence: " + App.blockSequence);
 
-
-        int blockSize = blockSizeKb * KILOBYTE;
-        byte[] blockArr = new byte[blockSize];
-        for (int b = 0; b < blockArr.length; b++) {
-            if (b % 2 == 0) {
-                blockArr[b] = (byte) 0xFF;
-            }
-        }
-
         Gui.updateLegend();  // init chart legend info
 
         if (App.autoReset) {
@@ -88,9 +80,7 @@ public class DiskWorker {
           The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
          */
         if (App.writeTest){
-            // Create and start a thread for writing benchmark
-            Thread writeThread = new Thread(new WritingMark<>(
-                    DiskRun.IOMode.WRITE,
+            WritingMark<Boolean> writeBenchmark = new WritingMark<>(DiskRun.IOMode.WRITE,
                     App.blockSequence,
                     App.numOfMarks,
                     App.numOfBlocks,
@@ -98,8 +88,9 @@ public class DiskWorker {
                     App.targetTxSizeKb(),
                     Util.getDiskInfo(dataDir),
                     currentUI
-            ));
-            writeThread.start();
+            );
+
+            new Invoker(writeBenchmark).invoke();
         }
 
         /*
@@ -122,21 +113,20 @@ public class DiskWorker {
 
         // Same as above, just for Read operations instead of Writes.
         if (App.readTest) {
-            // Create and start a thread for reading benchmark
-            Thread readThread = new Thread(
-                    new ReadingMark<>(
-                        DiskRun.IOMode.READ,
-                        App.blockSequence,
-                        App.numOfMarks,
-                        App.numOfBlocks,
-                        App.blockSizeKb,
-                        App.targetTxSizeKb(),
-                        Util.getDiskInfo(dataDir),
-                        currentUI
-                    )
+            ReadingMark<Boolean> readBenchmark = new ReadingMark<>(
+                    DiskRun.IOMode.READ,
+                    App.blockSequence,
+                    App.numOfMarks,
+                    App.numOfBlocks,
+                    App.blockSizeKb,
+                    App.targetTxSizeKb(),
+                    Util.getDiskInfo(dataDir),
+                    currentUI
             );
 
-            readThread.start();
+            new Invoker(readBenchmark).invoke();
+
+            if(!readBenchmark.isSuccess())  return false;
         }
 
         App.nextMarkNumber += App.numOfMarks;

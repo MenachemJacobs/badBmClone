@@ -59,7 +59,8 @@ public abstract class ReadWriteCommands<T> implements Runnable, Command {
     }
 
     @Override
-    public void run() {// Tell logger and GUI to display what we know so far about the Run
+    public void run() {
+        // Tell logger and GUI to display what we know so far about the Run
         msg("disk info: (" + run.getDiskInfo() + ")");
 
         Gui.chartPanel.getChart().getTitle().setVisible(true);
