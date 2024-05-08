@@ -14,15 +14,35 @@ import java.util.Properties;
 import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.persist.DiskRun.BlockSequence.SEQUENTIAL;
 
+/**
+ * The CommandTests class contains JUnit test methods for testing the command pattern
+ * implementations in the jDiskMark benchmarking tool.
+ *
+ * It imports several classes and interfaces from the jDiskMark library and JUnit framework.
+ * These include classes for benchmarking commands, UI elements, disk run information,
+ * file handling, and properties configuration.
+ *
+ * The setupDefaultAsPerProperties() method initializes static classes and fields to
+ * allow DiskWorker to run properly.
+ *
+ */
 public class CommandTests {
     UIWorker<Boolean> myUiWorker;
 
+    /**
+     * Sets up the test environment before each test method execution by initializing
+     * default properties and creating a UIWorker instance.
+     */
     @BeforeEach
     void setUp() {
         setupDefaultAsPerProperties();
         myUiWorker = new TestingUIWorker<>();
     }
 
+    /**
+     * Tests the reading benchmark by creating a ReadingMark instance and invoking
+     * its benchmarking operation using an Invoker.
+     */
     @Test
     void read(){
         ReadingMark<Boolean> readBenchmark = new ReadingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),
@@ -31,7 +51,10 @@ public class CommandTests {
         new Invoker(readBenchmark).invoke();
     }
 
-
+    /**
+     * Tests the writing benchmark by creating a WritingMark instance and invoking
+     * its benchmarking operation using an Invoker.
+     */
     @Test
     void write(){
         WritingMark<Boolean> writeBenchmark = new WritingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),

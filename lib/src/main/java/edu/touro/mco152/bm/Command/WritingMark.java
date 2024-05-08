@@ -5,9 +5,6 @@ import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
-import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 
 import java.io.File;
@@ -21,20 +18,44 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
-public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
+/**
+ * The WritingMark class represents a command for performing write benchmarking operations
+ * in the jDiskMark benchmarking tool.
+ *
+ * It extends the ReadWriteCommands abstract class and is responsible for executing write
+ * benchmarking operations and updating UI progress accordingly.
+ *
+ * @param <T> The type of UI worker used for updating UI progress.
+ */
+public class WritingMark<T> extends ReadWriteCommands<T>{
 
+    /**
+     * Constructs a new WritingMark object with the specified parameters.
+     *
+     * @param mode The I/O mode for the disk run (READ or WRITE).
+     * @param sequence The block sequence for the disk run.
+     * @param numOfMarks The number of marks for the disk run.
+     * @param numOfBlocks The number of blocks per mark.
+     * @param blockSizeKb The size of each block in kilobytes.
+     * @param targetTxSizeKb The target transaction size in kilobytes.
+     * @param dirLocation The directory location for the disk run.
+     * @param myWorker The UI worker for updating UI progress.
+     */
     public WritingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
         super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker);
         OP = WRITE;
     }
 
+    /**
+     * Executes the write benchmarking operation.
+     */
     @Override
-    public void execute() {
+    public void particularOp() {
         // Create a test data file using the default file system and config-specified location
         if (!App.multiFile) {
             testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata.jdm");
         }
-
+        
         /*
         Begin an outer loop for specified duration (number of 'marks') of benchmark,
         that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
@@ -80,9 +101,9 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-                /*
-                  Compute duration, throughput of this Mark's step of BM
-                 */
+            /*
+            Compute duration, throughput of this Mark's step of BM
+            */
             long endTime = System.nanoTime();
             long elapsedTimeNs = endTime - startTime;
             double sec = (double) elapsedTimeNs / (double) 1000000000;
@@ -92,9 +113,9 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
                     + Util.displayString(sec) + " sec)");
             updateMetrics(genericMark);
 
-                /*
-                  Let the GUI know the interim result described by the current Mark
-                 */
+            /*
+            Let the GUI know the interim result described by the current Mark
+            */
             myWorker.publishChunks(genericMark);
 
             // Keep track of statistics to be displayed and persisted after all Marks are done.
@@ -103,15 +124,5 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
             run.setRunAvg(genericMark.getCumAvg());
             run.setEndTime(new Date());
         } // END outer loop for specified duration (number of 'marks') for WRITE benchmark
-
-            /*
-              Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
-             */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
-
-        Gui.runPanel.addRun(run);
     }
 }

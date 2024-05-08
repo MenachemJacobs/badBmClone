@@ -21,19 +21,49 @@ import static edu.touro.mco152.bm.App.*;
 
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
+/**
+ * The ReadingMark class represents a command for performing read benchmarking operations
+ * in the jDiskMark benchmarking tool.
+ *
+ * It extends the ReadWriteCommands abstract class and implements the Command interface.
+ * This class is responsible for executing read benchmarking operations and updating UI
+ * progress accordingly.
+ *
+ * @param <T> The type of UI worker used for updating UI progress.
+ */
 public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
 
     boolean isSuccess = true;
 
+    /**
+     * Constructs a new ReadingMark object with the specified parameters.
+     *
+     * @param mode The I/O mode for the disk run (READ or WRITE).
+     * @param sequence The block sequence for the disk run.
+     * @param numOfMarks The number of marks for the disk run.
+     * @param numOfBlocks The number of blocks per mark.
+     * @param blockSizeKb The size of each block in kilobytes.
+     * @param targetTxSizeKb The target transaction size in kilobytes.
+     * @param dirLocation The directory location for the disk run.
+     * @param myWorker The UI worker for updating UI progress.
+     */
     public ReadingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
         super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker);
         OP = READ;
     }
 
+    /**
+     * Indicates whether the read operation was successful.
+     *
+     * @return true if the read operation was successful, false otherwise.
+     */
     public boolean isSuccess(){return isSuccess;}
 
+    /**
+     * Executes the read benchmarking operation.
+     */
     @Override
-    public void execute()  {
+    public void particularOp()  {
         for (int m = super.startFileNum; m < startFileNum + run.getNumMarks() && !myWorker.getIsCancelled(); m++) {
 
             if (multiFile) testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
@@ -84,16 +114,5 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
             run.setRunAvg(genericMark.getCumAvg());
             run.setEndTime(new Date());
         }
-
-        /*
-        Persist info about the Read BM Run (e.g. into Derby Database) and add it to a GUI panel
-        */
-
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
-
-        Gui.runPanel.addRun(run);
     }
 }
