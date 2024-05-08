@@ -84,7 +84,7 @@ public class DiskWorker {
                     App.blockSequence,
                     App.numOfMarks,
                     App.numOfBlocks,
-                    App.blockSizeKb,
+                    (App.blockSizeKb * KILOBYTE),
                     App.targetTxSizeKb(),
                     Util.getDiskInfo(dataDir),
                     currentUI
@@ -118,7 +118,7 @@ public class DiskWorker {
                     App.blockSequence,
                     App.numOfMarks,
                     App.numOfBlocks,
-                    App.blockSizeKb,
+                    (App.blockSizeKb * KILOBYTE),
                     App.targetTxSizeKb(),
                     Util.getDiskInfo(dataDir),
                     currentUI

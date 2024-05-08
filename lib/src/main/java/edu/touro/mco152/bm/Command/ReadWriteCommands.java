@@ -34,19 +34,17 @@ public abstract class ReadWriteCommands<T> implements Runnable, Command {
     //TODO REMOVE REFERENCE TO APP
     int startFileNum = App.nextMarkNumber;
 
-    public ReadWriteCommands(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
+    public ReadWriteCommands(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSize, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
         run = new DiskRun(mode, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
-        run.setBlockSize(blockSizeKb);
+        run.setBlockSize(blockSize);
         run.setTxSize(targetTxSizeKb);
         run.setDiskInfo(dirLocation);
 
         wUnitsTotal = (mode == DiskRun.IOMode.WRITE) ? numOfBlocks * numOfMarks : 0;
         rUnitsTotal = (mode == DiskRun.IOMode.READ) ? numOfBlocks * numOfMarks : 0;
         unitsTotal = wUnitsTotal + rUnitsTotal;
-
-        blockSize = blockSizeKb * KILOBYTE;
 
         blockArr = new byte[blockSize];
         for (int b = 0; b < blockArr.length; b++) {

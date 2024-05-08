@@ -1,6 +1,8 @@
-import edu.touro.mco152.bm.App;
-import edu.touro.mco152.bm.DiskWorker;
-import edu.touro.mco152.bm.TestingUIWorker;
+import edu.touro.mco152.bm.*;
+import edu.touro.mco152.bm.Command.Invoker;
+import edu.touro.mco152.bm.Command.ReadingMark;
+import edu.touro.mco152.bm.Command.WritingMark;
+import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,32 +11,41 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static edu.touro.mco152.bm.App.*;
+import static edu.touro.mco152.bm.persist.DiskRun.BlockSequence.SEQUENTIAL;
 
-class DiskWorkerTest {
-    TestingUIWorker<Boolean> myTestWorker;
+public class CommandTests {
+    UIWorker<Boolean> myUiWorker;
 
     @BeforeEach
-    void setUpMyWorker() throws Exception {
-        myTestWorker = new TestingUIWorker<>();
+    void setUp() {
         setupDefaultAsPerProperties();
+        myUiWorker = new TestingUIWorker<>();
     }
 
     @Test
-    void diskWorker() throws Exception {
-        DiskWorker myDiskWorker= new DiskWorker(myTestWorker);
+    void read(){
+        ReadingMark<Boolean> readBenchmark = new ReadingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),
+                Util.getDiskInfo(dataDir), myUiWorker);
 
-        myTestWorker.executeTask();
-        assertNotEquals(0, myTestWorker.getProgress());
-        assertTrue(myTestWorker.getLastStatus());
+        new Invoker(readBenchmark).invoke();
+    }
 
+
+    @Test
+    void write(){
+        WritingMark<Boolean> writeBenchmark = new WritingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),
+                Util.getDiskInfo(dataDir), myUiWorker);
+
+        new Invoker(writeBenchmark).invoke();
     }
 
     /**
      * Bruteforce setup of static classes/fields to allow DiskWorker to run.
      *
+     * @author lcmcohen
      */
-    public static void setupDefaultAsPerProperties () {
+    public static void setupDefaultAsPerProperties() {
         /// Do the minimum of what  App.init() would do to allow to run.
         Gui.mainFrame = new MainFrame();
         App.p = new Properties();
@@ -53,7 +64,7 @@ class DiskWorkerTest {
             App.locationDir = new File(System.getProperty("user.home"));
         }
 
-        App.dataDir = new File(App.locationDir.getAbsolutePath()+File.separator+App.DATADIRNAME);
+        App.dataDir = new File(App.locationDir.getAbsolutePath() + File.separator + App.DATADIRNAME);
 
         //5. remove existing test data if exist
         if (App.dataDir.exists()) {
@@ -62,9 +73,7 @@ class DiskWorkerTest {
             } else {
                 App.msg("unable to remove existing data dir");
             }
-        }
-        else
-        {
+        } else {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
     }
