@@ -55,7 +55,7 @@ public class WritingMark<T> extends ReadWriteCommands<T>{
         if (!App.multiFile) {
             testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata.jdm");
         }
-        
+
         /*
         Begin an outer loop for specified duration (number of 'marks') of benchmark,
         that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
