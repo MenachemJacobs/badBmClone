@@ -130,9 +130,9 @@ public class DiskWorker {
             for (int m = startFileNum; m < startFileNum + App.numOfMarks && !currentUI.getIsCancelled(); m++) {
 
                 if (App.multiFile) {
-                    testFile = new File(dataDir.getAbsolutePath()
-                            + File.separator + "testdata" + m + ".jdm");
+                    testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
                 }
+
                 wMark = new DiskMark(WRITE);    // starting to keep track of a new benchmark
                 wMark.setMarkNum(m);
                 long startTime = System.nanoTime();
