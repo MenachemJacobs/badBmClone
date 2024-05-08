@@ -40,10 +40,9 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
         that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
         and is reported to the GUI for display as each Mark completes.
         */
-        for (int m = startFileNum; m < startFileNum + numOfMarks && !myWorker.getIsCancelled(); m++) {
+        for (int m = startFileNum; m < startFileNum + run.getNumMarks() && !myWorker.getIsCancelled(); m++) {
 
-            if (multiFile)
-                testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
+            if (multiFile)  testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
 
 
             genericMark = new DiskMark(OP);    // starting to keep track of a new benchmark
@@ -58,9 +57,9 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
 
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, mode)) {
-                    for (int b = 0; b < numOfBlocks; b++) {
-                        if (blockSequence == DiskRun.BlockSequence.RANDOM) {
-                            int rLoc = Util.randInt(0, numOfBlocks - 1);
+                    for (int b = 0; b < run.getNumBlocks(); b++) {
+                        if (run.getBlockOrder() == DiskRun.BlockSequence.RANDOM) {
+                            int rLoc = Util.randInt(0, run.getNumBlocks() - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {
                             rAccFile.seek((long) b * blockSize);
@@ -89,8 +88,7 @@ public class WritingMark<T> extends ReadWriteCommands<T> implements Command {
             double sec = (double) elapsedTimeNs / (double) 1000000000;
             double mbWritten = (double) totalBytesWrittenInMark / (double) MEGABYTE;
             genericMark.setBwMbSec(mbWritten / sec);
-            msg("m:" + m + " write IO is " + genericMark.getBwMbSecAsString() + " MB/s     "
-                    + "(" + Util.displayString(mbWritten) + "MB written in "
+            msg("m:" + m + " write IO is " + genericMark.getBwMbSecAsString() + " MB/s     " + "(" + Util.displayString(mbWritten) + "MB written in "
                     + Util.displayString(sec) + " sec)");
             updateMetrics(genericMark);
 

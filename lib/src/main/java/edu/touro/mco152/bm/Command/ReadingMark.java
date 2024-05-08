@@ -34,7 +34,7 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
 
     @Override
     public void execute()  {
-        for (int m = super.startFileNum; m < startFileNum + numOfMarks && !myWorker.getIsCancelled(); m++) {
+        for (int m = super.startFileNum; m < startFileNum + run.getNumMarks() && !myWorker.getIsCancelled(); m++) {
 
             if (multiFile) testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
 
@@ -45,9 +45,9 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
 
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, "r")) {
-                    for (int b = 0; b < numOfBlocks; b++) {
-                        if (blockSequence == DiskRun.BlockSequence.RANDOM) {
-                            int rLoc = Util.randInt(0, numOfBlocks - 1);
+                    for (int b = 0; b < run.getNumBlocks(); b++) {
+                        if (run.getBlockOrder() == DiskRun.BlockSequence.RANDOM) {
+                            int rLoc = Util.randInt(0, run.getNumBlocks() - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {
                             rAccFile.seek((long) b * blockSize);
