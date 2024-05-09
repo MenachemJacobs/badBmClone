@@ -12,11 +12,11 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DiskWorkerTest {
-    TestingUIWorker myTestWorker;
+    TestingUIWorker<Boolean> myTestWorker;
 
     @BeforeEach
     void setUpMyWorker() throws Exception {
-        myTestWorker = new TestingUIWorker();
+        myTestWorker = new TestingUIWorker<>();
         setupDefaultAsPerProperties();
     }
 
