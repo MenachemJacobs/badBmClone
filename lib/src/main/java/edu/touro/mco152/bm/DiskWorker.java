@@ -30,7 +30,7 @@ import static edu.touro.mco152.bm.App.*;
  * This class only knows how to do 'read' or 'write' disk benchmarks, all of which is done in doInBackground(). It is instantiated by the
  * startBenchmark() method.
  * <p>
- * To be Swing compliant this class extends SwingWorker and is dependant on it. It declares that its final return (when
+ * To be Swing compliant this class extends SwingWorker and is dependent on it. It declares that its final return (when
  * doInBackground() is finished) is of type Boolean, and declares that intermediate results are communicated to
  * Swing using an instance of the DiskMark class.
  */
@@ -107,7 +107,7 @@ public class DiskWorker {
                             using the included RAMMap.exe or flushmem.exe utilities.
                             Removable drives can be disconnected and reconnected.
                             For system drives use the WRITE and READ operations\s
-                            independantly by doing a cold reboot after the WRITE""",
+                            independently by doing a cold reboot after the WRITE""",
                     "Clear Disk Cache Now", JOptionPane.PLAIN_MESSAGE);
         }
 
