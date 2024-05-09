@@ -5,9 +5,7 @@ import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 import javax.swing.*;
 import java.io.File;
@@ -78,13 +76,13 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
                     for (int b = 0; b < run.getNumBlocks(); b++) {
                         if (run.getBlockOrder() == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, run.getNumBlocks() - 1);
-                            rAccFile.seek((long) rLoc * blockSize);
+                            rAccFile.seek((long) rLoc * run.getBlockSize());
                         } else {
-                            rAccFile.seek((long) b * blockSize);
+                            rAccFile.seek((long) b * run.getBlockSize());
                         }
 
-                        rAccFile.readFully(blockArr, 0, blockSize);
-                        totalBytesReadInMark += blockSize;
+                        rAccFile.readFully(blockArr, 0, run.getBlockSize());
+                        totalBytesReadInMark += run.getBlockSize();
                         rUnitsComplete++;
                         unitsComplete = rUnitsComplete + wUnitsComplete;
                         percentComplete = (float) unitsComplete / (float) unitsTotal * 100f;

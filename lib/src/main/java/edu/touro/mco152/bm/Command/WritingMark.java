@@ -6,7 +6,6 @@ import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -51,6 +50,8 @@ public class WritingMark<T> extends ReadWriteCommands<T>{
      */
     @Override
     public void particularOp() {
+        System.out.println("block size equals " + run.getBlockSize());
+
         // Create a test data file using the default file system and config-specified location
         if (!App.multiFile) {
             testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata.jdm");
@@ -81,12 +82,12 @@ public class WritingMark<T> extends ReadWriteCommands<T>{
                     for (int b = 0; b < run.getNumBlocks(); b++) {
                         if (run.getBlockOrder() == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, run.getNumBlocks() - 1);
-                            rAccFile.seek((long) rLoc * blockSize);
+                            rAccFile.seek((long) rLoc * run.getBlockSize());
                         } else {
-                            rAccFile.seek((long) b * blockSize);
+                            rAccFile.seek((long) b * run.getBlockSize());
                         }
-                        rAccFile.write(blockArr, 0, blockSize);
-                        totalBytesWrittenInMark += blockSize;
+                        rAccFile.write(blockArr, 0, run.getBlockSize());
+                        totalBytesWrittenInMark += run.getBlockSize();
                         wUnitsComplete++;
                         unitsComplete = rUnitsComplete + wUnitsComplete;
                         percentComplete = (float) unitsComplete / (float) unitsTotal * 100f;
