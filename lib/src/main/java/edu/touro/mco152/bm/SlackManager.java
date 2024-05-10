@@ -71,8 +71,8 @@ public class SlackManager {
         // Initialize an API Methods client with the given token
         MethodsClient methods = slack.methods(getSlackToken());
 
-        String postText = String.format("Automated message from <%s>%s: %s",
-                System.getProperty("user.name"), appName, msg);
+        String postText = String.format("Automated message from <Menachem>%s: %s",
+                appName, msg);
 
         // Build a request object
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()

@@ -6,6 +6,7 @@ import edu.touro.mco152.bm.Command.WritingMark;
 import edu.touro.mco152.bm.ObserverElements.EntityManagerObserver;
 import edu.touro.mco152.bm.ObserverElements.GUIObserver;
 import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
+import edu.touro.mco152.bm.ObserverElements.SlackObserver;
 import edu.touro.mco152.bm.persist.DiskRun;
 
 import edu.touro.mco152.bm.ui.Gui;
@@ -60,6 +61,7 @@ public class DiskWorker {
         //TODO use add all instead
         mySubject.addObserver(new EntityManagerObserver());
         mySubject.addObserver(new GUIObserver());
+        mySubject.addObserver(new SlackObserver());
     }
 
     protected Boolean doInBackground() {
