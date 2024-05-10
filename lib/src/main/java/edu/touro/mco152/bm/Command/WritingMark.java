@@ -2,6 +2,7 @@ package edu.touro.mco152.bm.Command;
 
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
@@ -20,28 +21,29 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 /**
  * The WritingMark class represents a command for performing write benchmarking operations
  * in the jDiskMark benchmarking tool.
- *
+ * <p>
  * It extends the ReadWriteCommands abstract class and is responsible for executing write
  * benchmarking operations and updating UI progress accordingly.
  *
  * @param <T> The type of UI worker used for updating UI progress.
  */
-public class WritingMark<T> extends ReadWriteCommands<T>{
+public class WritingMark<T> extends ReadWriteCommands<T> {
 
     /**
      * Constructs a new WritingMark object with the specified parameters.
      *
-     * @param mode The I/O mode for the disk run (READ or WRITE).
-     * @param sequence The block sequence for the disk run.
-     * @param numOfMarks The number of marks for the disk run.
-     * @param numOfBlocks The number of blocks per mark.
-     * @param blockSizeKb The size of each block in kilobytes.
+     * @param mode           The I/O mode for the disk run (READ or WRITE).
+     * @param sequence       The block sequence for the disk run.
+     * @param numOfMarks     The number of marks for the disk run.
+     * @param numOfBlocks    The number of blocks per mark.
+     * @param blockSizeKb    The size of each block in kilobytes.
      * @param targetTxSizeKb The target transaction size in kilobytes.
-     * @param dirLocation The directory location for the disk run.
-     * @param myWorker The UI worker for updating UI progress.
+     * @param dirLocation    The directory location for the disk run.
+     * @param myWorker       The UI worker for updating UI progress.
+     * @param mySubject
      */
-    public WritingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
-        super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker);
+    public WritingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker, ObserverSubject mySubject) {
+        super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker, mySubject);
         OP = WRITE;
     }
 
@@ -64,7 +66,7 @@ public class WritingMark<T> extends ReadWriteCommands<T>{
         */
         for (int m = startFileNum; m < startFileNum + run.getNumMarks() && !myWorker.getIsCancelled(); m++) {
 
-            if (multiFile)  testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
+            if (multiFile) testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");
 
 
             genericMark = new DiskMark(OP);    // starting to keep track of a new benchmark

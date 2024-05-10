@@ -3,11 +3,12 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.Command.Invoker;
 import edu.touro.mco152.bm.Command.ReadingMark;
 import edu.touro.mco152.bm.Command.WritingMark;
+import edu.touro.mco152.bm.ObserverElements.EntityManagerObserver;
+import edu.touro.mco152.bm.ObserverElements.GUIObserver;
+import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.persist.DiskRun;
 
 import edu.touro.mco152.bm.ui.Gui;
-
-
 
 import javax.swing.*;
 
@@ -37,22 +38,31 @@ import static edu.touro.mco152.bm.App.*;
 
 public class DiskWorker {
     public final UIWorker<Boolean> currentUI;
+    private ObserverSubject mySubject = new ObserverSubject();
 
     public DiskWorker(UIWorker<Boolean> passedUI) {
         currentUI = passedUI;
         boolean[] result = new boolean[1];
 
         Runnable backgroundTask = () -> {
-            try { result[0] = doInBackground(); }
-            catch (Exception e) { e.printStackTrace(); }
-            finally { currentUI.onTaskCompleted(result[0]); }
+            try {
+                result[0] = doInBackground();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                currentUI.onTaskCompleted(result[0]);
+            }
         };
 
         currentUI.assignDoInBackground(backgroundTask);
         currentUI.assignHardWare(this);
+
+        //TODO use add all instead
+        mySubject.addObserver(new EntityManagerObserver());
+        mySubject.addObserver(new GUIObserver());
     }
 
-    protected Boolean doInBackground(){
+    protected Boolean doInBackground() {
 
         /*
           We 'got here' because: 1: End-user clicked 'Start' on the benchmark UI,
@@ -75,15 +85,17 @@ public class DiskWorker {
         /*
           The GUI allows a Write, Read, or both types of BMs to be started. They are done serially.
          */
-        if (App.writeTest){
-            WritingMark<Boolean> writeBenchmark = new WritingMark<>(DiskRun.IOMode.WRITE,
+        if (App.writeTest) {
+            WritingMark<Boolean> writeBenchmark = new WritingMark<>(
+                    DiskRun.IOMode.WRITE,
                     App.blockSequence,
                     App.numOfMarks,
                     App.numOfBlocks,
                     (App.blockSizeKb * KILOBYTE),
                     App.targetTxSizeKb(),
                     Util.getDiskInfo(dataDir),
-                    currentUI
+                    currentUI,
+                    mySubject
             );
 
             new Invoker(writeBenchmark).invoke();
@@ -117,12 +129,13 @@ public class DiskWorker {
                     (App.blockSizeKb * KILOBYTE),
                     App.targetTxSizeKb(),
                     Util.getDiskInfo(dataDir),
-                    currentUI
+                    currentUI,
+                    mySubject
             );
 
             new Invoker(readBenchmark).invoke();
 
-            if(!readBenchmark.isSuccess())  return false;
+            if (!readBenchmark.isSuccess()) return false;
         }
 
         App.nextMarkNumber += App.numOfMarks;
