@@ -3,20 +3,20 @@ package edu.touro.mco152.bm.ObserverElements;
 import java.util.ArrayList;
 
 public class ObserverSubject {
-    ArrayList<SubjectObservers> observerList = new ArrayList<>();
+    ArrayList<SubjectObserver> observerList = new ArrayList<>();
 
     //TODO it is possible this should take a list of codes and run them all.
     public void updateAllObservers(ObserverOperationCodes.OperationCode alertCode, Object alertContent) {
-        for (SubjectObservers observer : observerList) {
+        for (SubjectObserver observer : observerList) {
             observer.update(alertCode, alertContent);
         }
     }
 
-    public void addObserver(SubjectObservers observer) {
+    public void addObserver(SubjectObserver observer) {
         observerList.add(observer);
     }
 
-    public void addListOfObservers(ArrayList<SubjectObservers> observers) {
+    public void addListOfObservers(ArrayList<SubjectObserver> observers) {
         observerList.addAll(observers);
     }
 

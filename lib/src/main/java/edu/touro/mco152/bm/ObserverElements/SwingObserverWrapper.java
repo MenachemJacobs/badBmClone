@@ -2,7 +2,7 @@ package edu.touro.mco152.bm.ObserverElements;
 
 import edu.touro.mco152.bm.SwingUIWorker;
 
-public class SwingObserverWrapper implements SubjectObservers {
+public class SwingObserverWrapper implements SubjectObserver {
     SwingUIWorker<Boolean> mySwingWorker = new SwingUIWorker<>();
     ObserverSubject myObserver;
 

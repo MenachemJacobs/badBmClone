@@ -3,7 +3,7 @@ package edu.touro.mco152.bm.ObserverElements;
 import edu.touro.mco152.bm.persist.EM;
 import jakarta.persistence.EntityManager;
 
-public class EntityManagerObserver implements SubjectObservers {
+public class EntityManagerObserver implements SubjectObserver {
     @Override
     public void update(ObserverOperationCodes.OperationCode alertCode, Object alertContent) {
         if (alertCode == ObserverOperationCodes.OperationCode.NEW_RUN) {
