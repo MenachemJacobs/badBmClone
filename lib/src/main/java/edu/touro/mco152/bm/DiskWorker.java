@@ -43,13 +43,9 @@ public class DiskWorker {
         boolean[] result = new boolean[1];
 
         Runnable backgroundTask = () -> {
-            try {
-                result[0] = doInBackground();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                currentUI.onTaskCompleted(result[0]);
-            }
+            try { result[0] = doInBackground(); }
+            catch (Exception e) { e.printStackTrace(); }
+            finally { currentUI.onTaskCompleted(result[0]); }
         };
 
         currentUI.assignDoInBackground(backgroundTask);
