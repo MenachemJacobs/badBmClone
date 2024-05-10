@@ -1,6 +1,7 @@
 package edu.touro.mco152.bm.ObserverElements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ObserverSubject {
     ArrayList<SubjectObserver> observerList = new ArrayList<>();
@@ -16,8 +17,8 @@ public class ObserverSubject {
         observerList.add(observer);
     }
 
-    public void addListOfObservers(ArrayList<SubjectObserver> observers) {
-        observerList.addAll(observers);
+    public void addListOfObservers(SubjectObserver[] observers) {
+        observerList.addAll(Arrays.asList(observers));
     }
 
     public void removeAllObservers() {

@@ -3,10 +3,7 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.Command.Invoker;
 import edu.touro.mco152.bm.Command.ReadingMark;
 import edu.touro.mco152.bm.Command.WritingMark;
-import edu.touro.mco152.bm.ObserverElements.EntityManagerObserver;
-import edu.touro.mco152.bm.ObserverElements.GUIObserver;
-import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
-import edu.touro.mco152.bm.ObserverElements.SlackObserver;
+import edu.touro.mco152.bm.ObserverElements.*;
 import edu.touro.mco152.bm.persist.DiskRun;
 
 import edu.touro.mco152.bm.ui.Gui;
@@ -46,22 +43,21 @@ public class DiskWorker {
         boolean[] result = new boolean[1];
 
         Runnable backgroundTask = () -> {
-            try {
-                result[0] = doInBackground();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                currentUI.onTaskCompleted(result[0]);
-            }
+            try { result[0] = doInBackground(); }
+            catch (Exception e) { e.printStackTrace(); }
+            finally { currentUI.onTaskCompleted(result[0]); }
         };
 
         currentUI.assignDoInBackground(backgroundTask);
         currentUI.assignHardWare(this);
 
-        //TODO use add all instead
-        mySubject.addObserver(new EntityManagerObserver());
-        mySubject.addObserver(new GUIObserver());
-        mySubject.addObserver(new SlackObserver());
+        mySubject.addListOfObservers(
+            new SubjectObserver[]{
+                new EntityManagerObserver(),
+                new GUIObserver(),
+                new SlackObserver()
+            }
+        );
     }
 
     protected Boolean doInBackground() {

@@ -1,6 +1,5 @@
 package edu.touro.mco152.bm.ObserverElements;
 
-import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.SlackManager;
 import edu.touro.mco152.bm.persist.DiskRun;
 

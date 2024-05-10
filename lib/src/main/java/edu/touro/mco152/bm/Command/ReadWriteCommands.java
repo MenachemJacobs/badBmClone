@@ -6,9 +6,7 @@ import edu.touro.mco152.bm.ObserverElements.ObserverOperationCodes;
 import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
 
 
 import static edu.touro.mco152.bm.App.*;
@@ -62,8 +60,7 @@ public abstract class ReadWriteCommands<T> implements Command {
      * @param myWorker       The UI worker for updating UI progress.
      */
     public ReadWriteCommands(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks,
-                             int blockSize, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker, ObserverSubject mySubject)
-    {
+                             int blockSize, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker, ObserverSubject mySubject) {
         run = new DiskRun(mode, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
