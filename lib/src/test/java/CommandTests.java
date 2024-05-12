@@ -2,6 +2,7 @@ import edu.touro.mco152.bm.*;
 import edu.touro.mco152.bm.Command.Invoker;
 import edu.touro.mco152.bm.Command.ReadingMark;
 import edu.touro.mco152.bm.Command.WritingMark;
+import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
@@ -17,14 +18,13 @@ import static edu.touro.mco152.bm.persist.DiskRun.BlockSequence.SEQUENTIAL;
 /**
  * The CommandTests class contains JUnit test methods for testing the command pattern
  * implementations in the jDiskMark benchmarking tool.
- *
+ * <p>
  * It imports several classes and interfaces from the jDiskMark library and JUnit framework.
  * These include classes for benchmarking commands, UI elements, disk run information,
  * file handling, and properties configuration.
- *
+ * <p>
  * The setupDefaultAsPerProperties() method initializes static classes and fields to
  * allow DiskWorker to run properly.
- *
  */
 public class CommandTests {
     UIWorker<Boolean> myUiWorker;
@@ -44,9 +44,9 @@ public class CommandTests {
      * its benchmarking operation using an Invoker.
      */
     @Test
-    void read(){
+    void read() {
         ReadingMark<Boolean> readBenchmark = new ReadingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),
-                Util.getDiskInfo(dataDir), myUiWorker);
+                Util.getDiskInfo(dataDir), myUiWorker, new ObserverSubject());
 
         new Invoker(readBenchmark).invoke();
     }
@@ -56,9 +56,9 @@ public class CommandTests {
      * its benchmarking operation using an Invoker.
      */
     @Test
-    void write(){
+    void write() {
         WritingMark<Boolean> writeBenchmark = new WritingMark<>(DiskRun.IOMode.READ, SEQUENTIAL, 25, 128, (2048 * KILOBYTE), App.targetTxSizeKb(),
-                Util.getDiskInfo(dataDir), myUiWorker);
+                Util.getDiskInfo(dataDir), myUiWorker, new ObserverSubject());
 
         new Invoker(writeBenchmark).invoke();
     }

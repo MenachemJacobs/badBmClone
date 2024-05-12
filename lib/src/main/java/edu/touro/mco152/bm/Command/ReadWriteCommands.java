@@ -1,24 +1,22 @@
 package edu.touro.mco152.bm.Command;
 
-
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.ObserverElements.ObserverOperationCodes;
+import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import jakarta.persistence.EntityManager;
-
 
 import static edu.touro.mco152.bm.App.*;
 
 /**
  * The ReadWriteCommands abstract class provides a framework for implementing read and write
  * benchmarking commands in the jDiskMark benchmarking tool.
- *
+ * <p>
  * It imports several classes and interfaces from the jDiskMark library.
  * These include classes for managing disk runs, UI elements, disk marks, and utility methods.
- *
+ * <p>
  * This class declares and initializes local variables to keep track of benchmarks and a large
  * read/write buffer. It also provides methods for executing benchmark operations and updating
  * progress to the UI.
@@ -38,28 +36,29 @@ public abstract class ReadWriteCommands<T> implements Command {
     int unitsTotal;
     float percentComplete;
 
-    int blockSize;
     byte[] blockArr;
 
     DiskMark genericMark;  // declare vars that will point to objects used to pass progress to UI
     DiskMark.MarkType OP;
 
     UIWorker<T> myWorker;
+    ObserverSubject mySubj;
     int startFileNum = App.nextMarkNumber;
 
     /**
      * Constructs a new ReadWriteCommands object with the specified parameters.
      *
-     * @param mode The I/O mode for the disk run (READ or WRITE).
-     * @param sequence The block sequence for the disk run.
-     * @param numOfMarks The number of marks for the disk run.
-     * @param numOfBlocks The number of blocks per mark.
-     * @param blockSize The size of each block.
+     * @param mode           The I/O mode for the disk run (READ or WRITE).
+     * @param sequence       The block sequence for the disk run.
+     * @param numOfMarks     The number of marks for the disk run.
+     * @param numOfBlocks    The number of blocks per mark.
+     * @param blockSize      The size of each block.
      * @param targetTxSizeKb The target transaction size in kilobytes.
-     * @param dirLocation The directory location for the disk run.
-     * @param myWorker The UI worker for updating UI progress.
+     * @param dirLocation    The directory location for the disk run.
+     * @param myWorker       The UI worker for updating UI progress.
      */
-    public ReadWriteCommands(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSize, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
+    public ReadWriteCommands(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks,
+                             int blockSize, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker, ObserverSubject mySubject) {
         run = new DiskRun(mode, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
@@ -79,6 +78,7 @@ public abstract class ReadWriteCommands<T> implements Command {
         }
 
         this.myWorker = myWorker;
+        mySubj = mySubject;
     }
 
     /**
@@ -97,12 +97,7 @@ public abstract class ReadWriteCommands<T> implements Command {
         /*
         Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
         */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
-
-        Gui.runPanel.addRun(run);
+        mySubj.updateAllObservers(ObserverOperationCodes.OperationCode.NEW_RUN, run);
     }
 
     /**

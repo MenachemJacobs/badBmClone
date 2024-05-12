@@ -2,6 +2,7 @@ package edu.touro.mco152.bm.Command;
 
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.ObserverElements.ObserverSubject;
 import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.persist.DiskRun;
@@ -22,7 +23,7 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 /**
  * The ReadingMark class represents a command for performing read benchmarking operations
  * in the jDiskMark benchmarking tool.
- *
+ * <p>
  * It extends the ReadWriteCommands abstract class and implements the Command interface.
  * This class is responsible for executing read benchmarking operations and updating UI
  * progress accordingly.
@@ -36,17 +37,17 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
     /**
      * Constructs a new ReadingMark object with the specified parameters.
      *
-     * @param mode The I/O mode for the disk run (READ or WRITE).
-     * @param sequence The block sequence for the disk run.
-     * @param numOfMarks The number of marks for the disk run.
-     * @param numOfBlocks The number of blocks per mark.
-     * @param blockSizeKb The size of each block in kilobytes.
+     * @param mode           The I/O mode for the disk run (READ or WRITE).
+     * @param sequence       The block sequence for the disk run.
+     * @param numOfMarks     The number of marks for the disk run.
+     * @param numOfBlocks    The number of blocks per mark.
+     * @param blockSizeKb    The size of each block in kilobytes.
      * @param targetTxSizeKb The target transaction size in kilobytes.
-     * @param dirLocation The directory location for the disk run.
-     * @param myWorker The UI worker for updating UI progress.
+     * @param dirLocation    The directory location for the disk run.
+     * @param myWorker       The UI worker for updating UI progress.
      */
-    public ReadingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker) {
-        super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker);
+    public ReadingMark(DiskRun.IOMode mode, DiskRun.BlockSequence sequence, int numOfMarks, int numOfBlocks, int blockSizeKb, long targetTxSizeKb, String dirLocation, UIWorker<T> myWorker, ObserverSubject mySubject) {
+        super(mode, sequence, numOfMarks, numOfBlocks, blockSizeKb, targetTxSizeKb, dirLocation, myWorker, mySubject);
         OP = READ;
     }
 
@@ -55,13 +56,15 @@ public class ReadingMark<T> extends ReadWriteCommands<T> implements Command {
      *
      * @return true if the read operation was successful, false otherwise.
      */
-    public boolean isSuccess(){return isSuccess;}
+    public boolean isSuccess() {
+        return isSuccess;
+    }
 
     /**
      * Executes the read benchmarking operation.
      */
     @Override
-    public void particularOp()  {
+    public void particularOp() {
         for (int m = super.startFileNum; m < startFileNum + run.getNumMarks() && !myWorker.getIsCancelled(); m++) {
 
             if (multiFile) testFile = new File(dataDir.getAbsolutePath() + File.separator + "testdata" + m + ".jdm");

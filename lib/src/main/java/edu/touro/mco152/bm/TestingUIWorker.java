@@ -44,52 +44,37 @@ public class TestingUIWorker<T> implements UIWorker<T> {
      */
     @Override
     public void setTheProgress(int progress) {
-        if (progress < 0 || progress > 100) {
+        if (progress < 0 || progress > 100)
             throw new IllegalArgumentException("the value should be from 0 to 100");
-        }
 
-        if (this.progress == progress) {
+        if (this.progress == progress)
             return;
-        }
 
         int oldProgress = this.progress;
         this.progress = progress;
         assertTrue(oldProgress < this.progress);
-
-//        if(oldProgress > this.progress){
-//            throw new IllegalStateException("Progress can not fall during operation");
-//        }
     }
 
     @Override
     public void executeTask(){
-        try{
-            doInBackground();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        try{ doInBackground(); }
+        catch (Exception e){ e.printStackTrace(); }
     }
+
     protected Boolean doInBackground(){
-        try {
-            backgroundTask.run();
-            //setLastStatus(diskReturn);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        try { backgroundTask.run(); }
+        catch (Exception e) { e.printStackTrace(); }
+
         return getLastStatus();
     }
 
-    public Boolean getLastStatus() {
-        return lastStatus;
-    }
+    public Boolean getLastStatus() { return lastStatus; }
 
     public void setLastStatus(Boolean lastStatus) {
         this.lastStatus = lastStatus;
     }
 
-    public int getProgress(){
-        return progress;
-    }
+    public int getProgress(){ return progress; }
 
     @Override
     public T getResult(){ return null; }
@@ -102,6 +87,5 @@ public class TestingUIWorker<T> implements UIWorker<T> {
 
     @Override
     public void publishChunks(DiskMark chunks) {}
-
 
 }

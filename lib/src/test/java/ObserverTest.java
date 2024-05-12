@@ -1,39 +1,62 @@
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskWorker;
+import edu.touro.mco152.bm.ObserverElements.TestObserver;
 import edu.touro.mco152.bm.TestingUIWorker;
+import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DiskWorkerTest {
-    TestingUIWorker<Boolean> myTestWorker;
+/**
+ * JUnit test class for testing the functionality of an observer in a disk benchmarking application.
+ */
+public class ObserverTest {
+    static UIWorker<Boolean> myTestWorker;
+    static TestObserver myTestObserver;
 
+    /**
+     * Sets up the UI worker and test observer before each test method.
+     */
     @BeforeEach
     void setUpMyWorker(){
         myTestWorker = new TestingUIWorker<>();
+        myTestObserver = new TestObserver();
         setupDefaultAsPerProperties();
-    }
 
-    @Test
-    void diskWorker(){
-        new DiskWorker(myTestWorker);
-        myTestWorker.executeTask();
-
-        assertNotEquals(0, myTestWorker.getProgress());
-        assertTrue(myTestWorker.getLastStatus());
+        DiskWorker myWorker = new DiskWorker(myTestWorker);
+        myWorker.mySubject.addObserver(myTestObserver);
     }
 
     /**
-     * Bruteforce setup of static classes/fields to allow DiskWorker to run.
-     *
+     * Tests the observer functionality.
      */
-    public static void setupDefaultAsPerProperties () {
+    @Test
+    void testObserver(){
+        assertFalse(myTestObserver.getTestFlag());
+        myTestWorker.executeTask();
+    }
+
+    /**
+     * Tests the observer after all tests have been executed.
+     */
+    @AfterAll
+    static void testMyObserver(){
+        assertTrue(myTestObserver.getTestFlag());
+    }
+
+
+    /**
+     * Bruteforce setup of static classes/fields to allow DiskWorker to run.
+     */
+    public static void setupDefaultAsPerProperties() {
         /// Do the minimum of what  App.init() would do to allow to run.
         Gui.mainFrame = new MainFrame();
         App.p = new Properties();
@@ -52,7 +75,7 @@ class DiskWorkerTest {
             App.locationDir = new File(System.getProperty("user.home"));
         }
 
-        App.dataDir = new File(App.locationDir.getAbsolutePath()+File.separator+App.DATADIRNAME);
+        App.dataDir = new File(App.locationDir.getAbsolutePath() + File.separator + App.DATADIRNAME);
 
         //5. remove existing test data if exist
         if (App.dataDir.exists()) {
@@ -61,9 +84,7 @@ class DiskWorkerTest {
             } else {
                 App.msg("unable to remove existing data dir");
             }
-        }
-        else
-        {
+        } else {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
     }
