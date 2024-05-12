@@ -8,7 +8,6 @@ import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 
-
 import static edu.touro.mco152.bm.App.*;
 
 /**
@@ -37,7 +36,6 @@ public abstract class ReadWriteCommands<T> implements Command {
     int unitsTotal;
     float percentComplete;
 
-    int blockSize;
     byte[] blockArr;
 
     DiskMark genericMark;  // declare vars that will point to objects used to pass progress to UI

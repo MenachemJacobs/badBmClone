@@ -36,7 +36,7 @@ import static edu.touro.mco152.bm.App.*;
 
 public class DiskWorker {
     public final UIWorker<Boolean> currentUI;
-    private ObserverSubject mySubject = new ObserverSubject();
+    public final ObserverSubject mySubject = new ObserverSubject();
 
     public DiskWorker(UIWorker<Boolean> passedUI) {
         currentUI = passedUI;
@@ -54,7 +54,7 @@ public class DiskWorker {
         mySubject.addListOfObservers(
             new SubjectObserver[]{
                 new EntityManagerObserver(),
-                new GUIObserver(),
+                new Gui(),
                 new SlackObserver()
             }
         );

@@ -6,7 +6,6 @@ public class ObserverOperationCodes {
         SEND_E_COMMUNIQUE,
         READ,
         WRITE,
-        NEW_RUN,
-        DIVIDE
+        NEW_RUN
     }
 }
