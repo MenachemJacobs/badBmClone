@@ -6,7 +6,6 @@ import edu.touro.mco152.bm.UIWorker;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +15,16 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * JUnit test class for testing the functionality of an observer in a disk benchmarking application.
+ */
 public class ObserverTest {
     static UIWorker<Boolean> myTestWorker;
     static TestObserver myTestObserver;
 
+    /**
+     * Sets up the UI worker and test observer before each test method.
+     */
     @BeforeEach
     void setUpMyWorker(){
         myTestWorker = new TestingUIWorker<>();
@@ -30,12 +35,18 @@ public class ObserverTest {
         myWorker.mySubject.addObserver(myTestObserver);
     }
 
+    /**
+     * Tests the observer functionality.
+     */
     @Test
     void testObserver(){
         assertFalse(myTestObserver.getTestFlag());
         myTestWorker.executeTask();
     }
 
+    /**
+     * Tests the observer after all tests have been executed.
+     */
     @AfterAll
     static void testMyObserver(){
         assertTrue(myTestObserver.getTestFlag());
